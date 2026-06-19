@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("NonSensibleSoccer")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1565ba1edb7213eae86fdb8ee6bc0fa08463371b")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+55f3fc6ff6dc733adf2f1eefcb2dadb9c082e5ba")]
 [assembly: System.Reflection.AssemblyProductAttribute("NonSensibleSoccer")]
 [assembly: System.Reflection.AssemblyTitleAttribute("NonSensibleSoccer")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
