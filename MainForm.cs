@@ -12,6 +12,7 @@ internal sealed class MainForm : Form
     private readonly GameRenderer _renderer = new();
     private readonly Stopwatch _clock = Stopwatch.StartNew();
     private readonly Timer _timer;
+    private readonly Button _restartButton;
 
     private GameWorld _world;
     private long _lastTicks;
@@ -26,6 +27,21 @@ internal sealed class MainForm : Form
 
         var pitch = CreatePitchBounds(ClientRectangle);
         _world = new GameWorld(_input, pitch);
+
+        _restartButton = new Button
+        {
+            Text = "Restart",
+            AutoSize = true,
+            Anchor = AnchorStyles.Top | AnchorStyles.Right,
+            Location = new Point(ClientSize.Width - 100, 10),
+            TabStop = false
+        };
+        _restartButton.Click += (_, _) =>
+        {
+            _world.Restart();
+            ActiveControl = null;
+        };
+        Controls.Add(_restartButton);
 
         _timer = new Timer { Interval = 16 };
         _timer.Tick += OnTick;

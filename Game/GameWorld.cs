@@ -6,6 +6,9 @@ namespace NonSensibleSoccer.Game;
 
 internal sealed class GameWorld
 {
+    private const float CpuSpeedBeginner = 150f;
+    private const float CpuSpeedNormal = 168f;
+
     private readonly InputController _input;
     private readonly PhysicsGameplay _physics = new();
     private readonly CpuController _cpu = new();
@@ -46,8 +49,9 @@ internal sealed class GameWorld
             Owner = null
         };
 
+        ApplyDifficulty(MatchState.Difficulty, showMessage: false);
         MatchState.ResetTransientState();
-        MatchState.Message = "Kickoff";
+        _rules.ResetKickoff(Ball, HumanTeam, CpuTeam, Pitch, MatchState);
     }
 
     public void ResizePitch(RectangleF pitch)
@@ -65,6 +69,8 @@ internal sealed class GameWorld
 
     public void Update(float dt)
     {
+        HandleDifficultyInput();
+
         if (MatchState.IsGameOver)
         {
             if (_input.ConsumeRestartPressed())
@@ -98,6 +104,39 @@ internal sealed class GameWorld
             {
                 _rules.ResetKickoff(Ball, HumanTeam, CpuTeam, Pitch, MatchState);
             }
+        }
+    }
+
+    private void HandleDifficultyInput()
+    {
+        if (_input.ConsumeBeginnerPressed())
+        {
+            ApplyDifficulty(DifficultyLevel.Beginner, showMessage: true);
+            return;
+        }
+
+        if (_input.ConsumeNormalPressed())
+        {
+            ApplyDifficulty(DifficultyLevel.Normal, showMessage: true);
+        }
+    }
+
+    private void ApplyDifficulty(DifficultyLevel difficulty, bool showMessage)
+    {
+        MatchState.Difficulty = difficulty;
+        _physics.CpuPlayerSpeed = difficulty switch
+        {
+            DifficultyLevel.Beginner => CpuSpeedBeginner,
+            _ => CpuSpeedNormal
+        };
+
+        if (showMessage)
+        {
+            MatchState.Message = difficulty == DifficultyLevel.Beginner
+                ? "Difficulty: Beginner"
+                : "Difficulty: Normal";
+            MatchState.TimeSinceKickoff = 0f;
+            MatchState.IsKickoff = true;
         }
     }
 

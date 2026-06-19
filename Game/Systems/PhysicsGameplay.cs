@@ -5,6 +5,8 @@ namespace NonSensibleSoccer.Game.Systems;
 
 internal sealed class PhysicsGameplay
 {
+    private const float PickupTieMargin = 2f;
+
     public float PlayerSpeed { get; set; } = 190f;
     public float CpuPlayerSpeed { get; set; } = 178f;
     public float BallFriction { get; set; } = 0.985f;
@@ -21,6 +23,11 @@ internal sealed class PhysicsGameplay
 
     public void UpdateBall(Ball ball, float dt, RectangleF pitch)
     {
+        if (ball.PickupCooldownSeconds > 0f)
+        {
+            ball.PickupCooldownSeconds = MathF.Max(0f, ball.PickupCooldownSeconds - dt);
+        }
+
         if (ball.Owner is not null)
         {
             ball.Position = ball.Owner.Position + new Vector2(ball.Owner.Radius + 3f, 0f);
@@ -61,23 +68,37 @@ internal sealed class PhysicsGameplay
 
     public bool TryPickupBall(Ball ball, IEnumerable<Player> players)
     {
-        if (ball.Owner is not null)
+        if (ball.Owner is not null || ball.PickupCooldownSeconds > 0f)
         {
             return false;
         }
 
-        var nearest = players
+        var candidates = players
             .Select(p => new { Player = p, Dist = Vector2.Distance(p.Position, ball.Position) })
+            .Where(x => x.Dist <= PickupRadius + x.Player.Radius)
             .OrderBy(x => x.Dist)
-            .FirstOrDefault();
+            .Take(2)
+            .ToArray();
 
-        if (nearest is not null && nearest.Dist <= PickupRadius + nearest.Player.Radius)
+        if (candidates.Length == 0)
         {
-            ball.Owner = nearest.Player;
-            return true;
+            return false;
         }
 
-        return false;
+        if (candidates.Length > 1 && MathF.Abs(candidates[0].Dist - candidates[1].Dist) <= PickupTieMargin)
+        {
+            return false;
+        }
+
+        var winner = candidates[0].Player;
+        if (ReferenceEquals(winner, ball.LastOwner))
+        {
+            return false;
+        }
+
+        ball.Owner = winner;
+        ball.LastOwner = winner;
+        return true;
     }
 
     public void KickBall(Ball ball, Vector2 direction, float power)
@@ -87,10 +108,14 @@ internal sealed class PhysicsGameplay
             return;
         }
 
+        var previousOwner = ball.Owner;
+
         var normalized = direction.LengthSquared() > 0 ? Vector2.Normalize(direction) : Vector2.UnitX;
-        ball.Position = ball.Owner.Position + normalized * (ball.Owner.Radius + ball.Radius + 2f);
+        ball.Position = previousOwner.Position + normalized * (previousOwner.Radius + ball.Radius + 2f);
         ball.Velocity = normalized * power;
         ball.Owner = null;
+        ball.LastOwner = previousOwner;
+        ball.PickupCooldownSeconds = 0.08f;
     }
 
     private static Vector2 ClampToPitch(Vector2 pos, float radius, RectangleF pitch)

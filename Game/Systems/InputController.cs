@@ -9,6 +9,8 @@ internal sealed class InputController
     private bool _shootConsumed;
     private bool _switchConsumed;
     private bool _restartConsumed;
+    private bool _difficultyBeginnerConsumed;
+    private bool _difficultyNormalConsumed;
 
     public void OnKeyDown(Keys key) => _keysDown.Add(key);
 
@@ -94,6 +96,40 @@ internal sealed class InputController
         if (!pressed)
         {
             _restartConsumed = false;
+        }
+
+        return false;
+    }
+
+    public bool ConsumeBeginnerPressed()
+    {
+        var pressed = _keysDown.Contains(Keys.D1) || _keysDown.Contains(Keys.NumPad1) || _keysDown.Contains(Keys.F1);
+        if (pressed && !_difficultyBeginnerConsumed)
+        {
+            _difficultyBeginnerConsumed = true;
+            return true;
+        }
+
+        if (!pressed)
+        {
+            _difficultyBeginnerConsumed = false;
+        }
+
+        return false;
+    }
+
+    public bool ConsumeNormalPressed()
+    {
+        var pressed = _keysDown.Contains(Keys.D2) || _keysDown.Contains(Keys.NumPad2) || _keysDown.Contains(Keys.F2);
+        if (pressed && !_difficultyNormalConsumed)
+        {
+            _difficultyNormalConsumed = true;
+            return true;
+        }
+
+        if (!pressed)
+        {
+            _difficultyNormalConsumed = false;
         }
 
         return false;

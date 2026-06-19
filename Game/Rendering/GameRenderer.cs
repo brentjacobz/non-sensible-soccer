@@ -16,7 +16,8 @@ internal sealed class GameRenderer
         DrawTeam(g, cpu, Color.FromArgb(232, 70, 70), Color.FromArgb(255, 245, 230));
         DrawTeam(g, human, Color.FromArgb(61, 168, 250), Color.FromArgb(255, 245, 230));
         DrawBall(g, ball);
-        DrawHud(g, clientRect, human, cpu, state);
+        DrawOwnerMarker(g, ball);
+        DrawHud(g, clientRect, human, cpu, ball, state);
     }
 
     private static void DrawPitch(Graphics g, RectangleF pitch)
@@ -65,7 +66,33 @@ internal sealed class GameRenderer
         g.DrawEllipse(ballPen, ball.Position.X - ball.Radius, ball.Position.Y - ball.Radius, d, d);
     }
 
-    private void DrawHud(Graphics g, Rectangle clientRect, Team human, Team cpu, MatchState state)
+    private static void DrawOwnerMarker(Graphics g, Ball ball)
+    {
+        if (ball.Owner is null)
+        {
+            return;
+        }
+
+        var owner = ball.Owner;
+        var markerY = owner.Position.Y - owner.Radius - 16f;
+        var markerX = owner.Position.X;
+        var markerColor = owner.IsHumanTeam ? Color.FromArgb(255, 250, 221, 97) : Color.FromArgb(255, 255, 159, 122);
+
+        using var markerBrush = new SolidBrush(markerColor);
+        using var markerPen = new Pen(Color.FromArgb(200, 35, 35, 35), 1.2f);
+
+        var points = new[]
+        {
+            new PointF(markerX, markerY),
+            new PointF(markerX - 6f, markerY - 10f),
+            new PointF(markerX + 6f, markerY - 10f)
+        };
+
+        g.FillPolygon(markerBrush, points);
+        g.DrawPolygon(markerPen, points);
+    }
+
+    private void DrawHud(Graphics g, Rectangle clientRect, Team human, Team cpu, Ball ball, MatchState state)
     {
         var scoreText = $"YOU {human.Score} - {cpu.Score} CPU";
         using var shadowBrush = new SolidBrush(Color.FromArgb(100, 0, 0, 0));
@@ -73,8 +100,19 @@ internal sealed class GameRenderer
         g.DrawString(scoreText, _hudFont, shadowBrush, 18f, 16f);
         g.DrawString(scoreText, _hudFont, textBrush, 16f, 14f);
 
-        var controlsText = "WASD/Arrows Move | Q/Tab Switch | Space Pass | Ctrl Shoot";
+        var controlsText = "WASD/Arrows Move | Q/Tab Switch | Space Pass | Ctrl Shoot | 1/F1 Beginner | 2/F2 Normal";
         g.DrawString(controlsText, _hudFont, textBrush, 16f, clientRect.Height - 30f);
+
+        var possessionText = "Possession: Loose Ball";
+        if (ball.Owner is not null)
+        {
+            possessionText = ball.Owner.IsHumanTeam ? "Possession: You" : "Possession: CPU";
+        }
+
+        g.DrawString(possessionText, _hudFont, textBrush, clientRect.Width - 190f, 14f);
+
+        var difficultyText = $"Difficulty: {state.Difficulty}";
+        g.DrawString(difficultyText, _hudFont, textBrush, 16f, 34f);
 
         if (!string.IsNullOrWhiteSpace(state.Message))
         {

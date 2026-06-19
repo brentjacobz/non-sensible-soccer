@@ -45,10 +45,16 @@ internal sealed class RulesSystem
             player.Velocity = Vector2.Zero;
         }
 
-        humanTeam.SetActivePlayer(humanTeam.Players[0]);
+        var humanKickoffPlayer = humanTeam.Players
+            .OrderBy(p => Vector2.DistanceSquared(p.Position, center))
+            .First();
+
+        humanTeam.SetActivePlayer(humanKickoffPlayer);
         cpuTeam.SetActivePlayer(cpuTeam.Players[0]);
 
-        ball.Owner = null;
+        ball.Owner = humanKickoffPlayer;
+        ball.LastOwner = humanKickoffPlayer;
+        ball.PickupCooldownSeconds = 0f;
         ball.Position = center;
         ball.Velocity = Vector2.Zero;
 
