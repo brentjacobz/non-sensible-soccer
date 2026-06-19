@@ -1,0 +1,17 @@
+namespace NonSensibleSoccer.Game.Models;
+
+internal sealed class MatchState
+{
+    public int TargetGoals { get; init; } = 3;
+    public bool IsKickoff { get; set; }
+    public bool IsGameOver { get; set; }
+    public string Message { get; set; } = "";
+    public float TimeSinceKickoff { get; set; }
+
+    public void ResetTransientState()
+    {
+        IsKickoff = true;
+        IsGameOver = false;
+        TimeSinceKickoff = 0f;
+    }
+}

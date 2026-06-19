@@ -1,0 +1,14 @@
+C:\ProgramData\TFS_GIT\non-sensible-soccer\obj\Debug\net8.0-windows\NonSensibleSoccer.GeneratedMSBuildEditorConfig.editorconfig
+C:\ProgramData\TFS_GIT\non-sensible-soccer\obj\Debug\net8.0-windows\NonSensibleSoccer.AssemblyInfoInputs.cache
+C:\ProgramData\TFS_GIT\non-sensible-soccer\obj\Debug\net8.0-windows\NonSensibleSoccer.AssemblyInfo.cs
+C:\ProgramData\TFS_GIT\non-sensible-soccer\obj\Debug\net8.0-windows\NonSensibleSoccer.csproj.CoreCompileInputs.cache
+C:\ProgramData\TFS_GIT\non-sensible-soccer\bin\Debug\net8.0-windows\NonSensibleSoccer.exe
+C:\ProgramData\TFS_GIT\non-sensible-soccer\bin\Debug\net8.0-windows\NonSensibleSoccer.deps.json
+C:\ProgramData\TFS_GIT\non-sensible-soccer\bin\Debug\net8.0-windows\NonSensibleSoccer.runtimeconfig.json
+C:\ProgramData\TFS_GIT\non-sensible-soccer\bin\Debug\net8.0-windows\NonSensibleSoccer.dll
+C:\ProgramData\TFS_GIT\non-sensible-soccer\bin\Debug\net8.0-windows\NonSensibleSoccer.pdb
+C:\ProgramData\TFS_GIT\non-sensible-soccer\obj\Debug\net8.0-windows\NonSensibleSoccer.dll
+C:\ProgramData\TFS_GIT\non-sensible-soccer\obj\Debug\net8.0-windows\refint\NonSensibleSoccer.dll
+C:\ProgramData\TFS_GIT\non-sensible-soccer\obj\Debug\net8.0-windows\NonSensibleSoccer.pdb
+C:\ProgramData\TFS_GIT\non-sensible-soccer\obj\Debug\net8.0-windows\NonSensibleSoccer.genruntimeconfig.cache
+C:\ProgramData\TFS_GIT\non-sensible-soccer\obj\Debug\net8.0-windows\ref\NonSensibleSoccer.dll
