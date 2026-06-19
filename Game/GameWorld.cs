@@ -93,6 +93,7 @@ internal sealed class GameWorld
 
         _physics.TryPickupBall(Ball, HumanTeam.Players.Concat(CpuTeam.Players));
         _physics.UpdateBall(Ball, dt, Pitch);
+        SyncHumanActivePlayerToBallOwner();
 
         var scorer = _rules.TryDetectGoal(Ball, HumanTeam, CpuTeam, Pitch);
         if (scorer is not null)
@@ -104,6 +105,19 @@ internal sealed class GameWorld
             {
                 _rules.ResetKickoff(Ball, HumanTeam, CpuTeam, Pitch, MatchState);
             }
+        }
+    }
+
+    private void SyncHumanActivePlayerToBallOwner()
+    {
+        if (Ball.Owner is null || !Ball.Owner.IsHumanTeam)
+        {
+            return;
+        }
+
+        if (!ReferenceEquals(HumanTeam.ActivePlayer, Ball.Owner))
+        {
+            HumanTeam.SetActivePlayer(Ball.Owner);
         }
     }
 
