@@ -20,7 +20,7 @@ internal sealed class MainForm : Form
     public MainForm()
     {
         Text = "Non-Sensible Soccer (Prototype)";
-        ClientSize = new Size(1024, 640);
+        ClientSize = new Size(1968, 1160);
         StartPosition = FormStartPosition.CenterScreen;
         KeyPreview = true;
         DoubleBuffered = true;

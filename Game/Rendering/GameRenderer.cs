@@ -42,19 +42,48 @@ internal sealed class GameRenderer
     {
         using var shirtBrush = new SolidBrush(shirtColor);
         using var activePen = new Pen(activeOutline, 2.8f);
+        using var skinBrush = new SolidBrush(Color.FromArgb(240, 205, 168));
+        using var shortsBrush = new SolidBrush(Color.FromArgb(42, 42, 54));
+        using var socksBrush = new SolidBrush(Color.FromArgb(235, 235, 235));
+        using var bootBrush = new SolidBrush(Color.FromArgb(20, 20, 20));
 
         foreach (var player in team.Players)
         {
-            var diameter = player.Radius * 2f;
-            var x = player.Position.X - player.Radius;
-            var y = player.Position.Y - player.Radius;
-            g.FillEllipse(shirtBrush, x, y, diameter, diameter);
+            DrawPixelPlayer(g, new PointF(player.Position.X, player.Position.Y), shirtBrush, skinBrush, shortsBrush, socksBrush, bootBrush);
 
             if (player.IsActive && team.IsHuman)
             {
+                var diameter = player.Radius * 2f;
+                var x = player.Position.X - player.Radius;
+                var y = player.Position.Y - player.Radius;
                 g.DrawEllipse(activePen, x - 2f, y - 2f, diameter + 4f, diameter + 4f);
             }
         }
+    }
+
+    private static void DrawPixelPlayer(
+        Graphics g,
+        PointF center,
+        Brush shirtBrush,
+        Brush skinBrush,
+        Brush shortsBrush,
+        Brush socksBrush,
+        Brush bootBrush)
+    {
+        const int px = 2;
+
+        var originX = (int)MathF.Round(center.X) - 5 * px;
+        var originY = (int)MathF.Round(center.Y) - 8 * px;
+
+        g.FillRectangle(skinBrush, originX + 3 * px, originY + 0 * px, 4 * px, 2 * px); // head
+        g.FillRectangle(shirtBrush, originX + 2 * px, originY + 2 * px, 6 * px, 4 * px); // torso
+        g.FillRectangle(shirtBrush, originX + 1 * px, originY + 3 * px, 1 * px, 2 * px); // left arm
+        g.FillRectangle(shirtBrush, originX + 8 * px, originY + 3 * px, 1 * px, 2 * px); // right arm
+        g.FillRectangle(shortsBrush, originX + 3 * px, originY + 6 * px, 4 * px, 2 * px); // shorts
+        g.FillRectangle(socksBrush, originX + 3 * px, originY + 8 * px, 1 * px, 2 * px); // left sock
+        g.FillRectangle(socksBrush, originX + 6 * px, originY + 8 * px, 1 * px, 2 * px); // right sock
+        g.FillRectangle(bootBrush, originX + 2 * px, originY + 10 * px, 2 * px, 1 * px); // left boot
+        g.FillRectangle(bootBrush, originX + 6 * px, originY + 10 * px, 2 * px, 1 * px); // right boot
     }
 
     private static void DrawBall(Graphics g, Ball ball)
